@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <!-- Gambar di pojok kiri atas -->
+            <div class="top-left-container">
+                <img src="gambaranjay/lgumm.png" alt="Logo UM" class="logo large">
+                <img src="gambaranjay/lgprodi.png" alt="Logo Prodi" class="logo">
+            </div>
+    
+            <!-- Navigasi di kanan -->
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link nav-item-text" href="identitas.html">Identitas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-item-text" href="halamanutama.html">Materi</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-item-text" href="quiz.html">Kuis</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <style>
+    /* Styling logo di pojok kiri atas */
+    .top-left-container {
+        display: flex; /* Menyelaraskan logo secara horizontal */
+        align-items: center; /* Menyelaraskan secara vertikal */
+        gap: 10px; /* Jarak antar logo */
+    }
+    
+    .logo {
+        height: 50px; /* Ukuran default untuk logo */
+        width: auto;
+    }
+    
+    .logo.large {
+        height: 80px; /* Logo lgumm lebih besar */
+    }
+    
+    /* Styling navbar */
+    .navbar {
+        padding: 10px 20px; /* Menambahkan padding agar navigasi terlihat proporsional */
+    }
+    
+    .navbar-nav {
+        display: flex; /* Membuat item navigasi sejajar secara horizontal */
+        align-items: center; /* Menyelaraskan item dengan logo */
+    }
+    
+    .nav-item-text {
+        font-size: 18px; /* Menyesuaikan ukuran teks navigasi agar proporsional dengan logo */
+        color: white; /* Warna teks */
+        padding: 8px 15px; /* Padding untuk membuat area klik lebih besar */
+        text-decoration: none; /* Menghilangkan garis bawah */
+    }
+    
+    .nav-item-text:hover {
+        color: #f0ad4e; /* Warna hover */
+        text-decoration: underline;
+    }
+    </style>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Interaktif</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        // Data kuis
+        const quizData = [
+            { question: "Bentuk aljabar berikut yang terdiri dari 3 suku adalah…", options: ["4x + 2y - 5", "3a<sup>2</sup>", "5x<sup>2</sup> - 4", "7xy + 6"], answer: 0, score: 10 },
+            { question: "Hasil dari penjumlahan 3x + 2y dan 4x - y adalah…", options: ["7x + y", "7x - y", "7x + 3y", "7x - 3y"], answer: 0, score: 10 },
+            { question: "Hasil dari 2x × 3y adalah…", options: ["6xy", "5xy", "6x + y", "5x + y"], answer: 0, score: 10 },
+            { question: "Hasil dari 6x<sup>2</sup> / 3x adalah…", options: ["2x<sup>2</sup>", "3x", "2x", "3x<sup>2</sup>"], answer: 2, score: 10 },
+            { question: "Jika suatu bilangan x dikalikan 3, kemudian ditambah 5, hasilnya adalah 20. Nilai x adalah…", options: ["2", "5", "3", "7"], answer: 1, score: 10 },
+            { question: "Hasil dari (2x + 4y) + (4x - y) - (x + 2y) adalah…", options: ["x + y", "7x - y", "5x + y", "5x + 2y"], answer: 2, score: 10 },
+            { question: "Sebuah toko menjual pensil seharga Rp2.000 per batang dan penghapus seharga Rp1.500 per buah. Jika Dina membeli 𝑥 pensil dan 𝑦 penghapus, maka total uang yang harus dibayarnya adalah:", options: ["2x - 1.5y", "2x + 1.5y", "2000x + 1500y", "2000x - 1500y"], answer: 2, score: 10 },
+            { question: "Ali memiliki panjang tali 𝑥 meter. Jika ia memotong 3 meter dari tali tersebut dan kemudian menambahkan 5 meter, panjang tali Ali sekarang adalah…", options: ["x - 2", "x - 8", "x + 8", "x + 2"], answer: 3, score: 10 },
+            { question: "Seorang penjahit membutuhkan 2𝑥 meter kain untuk membuat sebuah rok panjang. Jika ia memiliki total kain sepanjang 10𝑥 meter, jumlah rok yang dapat dibuatnya adalah…", options: ["2x", "5x", "20x", "10x"], answer: 1, score: 10 },
+            { question: "Seorang ayah memberikan uang kepada dua anaknya. Anak pertama menerima Rp3𝑥, dan anak kedua menerima Rp2x + Rp5.000. Jika total uang yang diberikan adalah Rp50.000, maka nilai 𝑥 adalah…", options: ["Rp10.000", "Rp8.000", "Rp7.500", "Rp9.000"], answer: 3, score: 10 }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let playerName = "";
+        let timerInterval;
+
+        function startQuiz() {
+            playerName = prompt("Masukkan nama Anda untuk memulai kuis:").trim();
+            if (!playerName) {
+                alert("Nama harus diisi untuk memulai kuis.");
+                return;
+            }
+            document.getElementById("quizModal").style.display = "block";
+            startTimer(10 * 60); // 10 menit
+            showQuestion();
+        }
+
+        function startTimer(duration) {
+            const timerDisplay = document.getElementById("timerDisplay");
+            let timeRemaining = duration;
+
+            timerInterval = setInterval(() => {
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                timerDisplay.innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Waktu habis! Kuis akan diakhiri.");
+                    finishQuiz();
+                }
+
+                timeRemaining--;
+            }, 1000);
+        }
+
+        function showQuestion() {
+            if (currentQuestion < quizData.length) {
+                const questionData = quizData[currentQuestion];
+                document.getElementById("questionText").innerText = questionData.question;
+                const optionsContainer = document.getElementById("optionsContainer");
+                optionsContainer.innerHTML = "";
+
+                questionData.options.forEach((option, index) => {
+                    const button = document.createElement("button");
+                    button.className = "btn btn-outline-primary m-2";
+                    button.innerText = option;
+                    button.onclick = () => checkAnswer(index);
+                    optionsContainer.appendChild(button);
+                });
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function checkAnswer(selectedOption) {
+            const questionData = quizData[currentQuestion];
+            if (selectedOption === questionData.answer) {
+                score += questionData.score;
+            }
+            currentQuestion++;
+            showQuestion();
+        }
+
+        function finishQuiz() {
+            clearInterval(timerInterval);
+            document.getElementById("quizModal").style.display = "none";
+            alert(`Kuis selesai! Skor Anda: ${score}`);
+            saveScore();
+        }
+
+        function saveScore() {
+            const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+            leaderboard.push({ name: playerName, score });
+            leaderboard.sort((a, b) => b.score - a.score);
+
+            if (leaderboard.length > 7) {
+                leaderboard.pop();
+            }
+
+            localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+            showLeaderboard();
+        }
+
+        function showLeaderboard() {
+            const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+            const leaderboardContainer = document.getElementById("leaderboardContainer");
+            leaderboardContainer.innerHTML = leaderboard.map((entry, index) => 
+                `<tr>
+                    <td>${index + 1}</td>
+                    <td>${entry.name}</td>
+                    <td>${entry.score}</td>
+                </tr>`
+            ).join("");
+        }
+
+        window.onload = () => {
+            showLeaderboard();
+            startQuoteRotation();
+        };
+
+        const quotes = [
+            "Kesalahan adalah guru terbaik kita; kita belajar paling banyak dari kegagalan, bukan dari keberhasilan. - Theodore Roosevelt",
+            "Kesalahan bukanlah akhir dari segalanya, melainkan langkah awal menuju sesuatu yang lebih baik. - Fiersa Besari",
+            "Orang yang tidak pernah membuat kesalahan adalah orang yang tidak pernah mencoba sesuatu yang baru. - Albert Einstein",
+            "Jangan takut untuk membuat kesalahan. Itu tanda bahwa kamu sedang berusaha. - John Wooden",
+            "Sebuah kesalahan adalah bukti bahwa kamu sedang mencoba. - Jennifer Lim",
+            "Kesalahan itu seperti pintu yang terbuka. Masuklah, belajarlah, lalu keluar lebih baik. - Wira Nagara",
+            "Orang bijak belajar dari kesalahannya. Orang yang lebih bijak belajar dari kesalahan orang lain. - Confucius",
+            "Jika kamu tidak membuat kesalahan, itu berarti kamu tidak sedang berusaha cukup keras. - Marva Collins",
+            "Kesalahan adalah kesempatan untuk memulai lagi, kali ini dengan lebih cerdas. - Henry Ford",
+            "Jangan takut salah. Kesalahan adalah bagian dari perjalanan menuju keberhasilan. - Dzawin Nur",
+            "Hiduplah seperti vektor. yang selalu mempunyai nilai dan arah. - Ferry esh",
+            "Tuan, kapan kamu immortal?. - Moh. Fatah"
+        ];
+
+        function startQuoteRotation() {
+            const quoteContainer = document.getElementById("quoteContainer");
+            let currentIndex = 0;
+            setInterval(() => {
+                quoteContainer.innerText = quotes[currentIndex];
+                currentIndex = (currentIndex + 1) % quotes.length;
+            }, 3000);
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            background: black;
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: rgb(0, 0, 0);
+            overflow: hidden;
+        }
+
+        video#bgVideo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            object-fit: cover;
+            background: #000; /* Fallback jika video gagal */
+        }
+
+        #quizModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgb(245, 224, 224);
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+        }
+
+        .leaderboard-box {
+            background: rgba(227, 218, 218, 0.8);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        #quoteContainer {
+            font-style: italic;
+            font-size: 20px;
+            text-align: center;
+            margin-top: 10px;
+            color: rgb(0, 0, 0);
+        }
+
+        #timerDisplay {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: rgb(0, 0, 0);
+            margin-bottom: 15px;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0);
+            text-align: center;
+            font-size: 17px;
+            font-weight: bold;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <video id="bgVideo" autoplay muted loop>
+        <source src="gambaranjay/bgquiz.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+
+    <div class="section-container center-right" style="margin-top: 90px;"></div>
+    <
+
+    <div class="container text-center mt-4">
+        <h1>Kuis</h1>
+        <button class="btn btn-primary" onclick="startQuiz()">Mulai Kuis</button>
+        <h2 class="mt-4">Leaderboard</h2>
+        <div class="leaderboard-box">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Skor</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardContainer">
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="quoteContainer"></div>
+    </div>
+    <div style="display: flex; justify-content: center; align-items: center; height: 10px; font-size: 17px; font-weight: bold;">
+        <footer>
+            &copy; 2024 Pengembang Materi Aljabar. Dikembangkan untuk pengalaman belajar terbaik.
+        </footer>
+    </div>    
+    <div id="quizModal">
+        <div id="timerDisplay"></div>
+        <h3 id="questionText"></h3>
+        <div id="optionsContainer" class="mt-3"></div>
+    </div>
+</body>
+</html>

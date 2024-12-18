@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi Aljabar Interaktif</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background: linear-gradient(to bottom, #000428, #004e92);
+            transition: background 0.5s ease-in-out;
+        }
+
+        #bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            filter: brightness(70%);
+        }
+
+        h2 {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 30px auto;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+        }
+
+        .materi-list ul {
+            list-style-type: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .materi-list ul li {
+            background: linear-gradient(135deg, #8e44ad, #3498db);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .materi-list ul li:hover {
+            transform: translateY(-10px);
+            background: linear-gradient(135deg, #3498db, #e74c3c);
+        }
+
+        .materi-list ul li img {
+            width: 100%;
+            border-radius: 8px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .materi-list ul li:hover img {
+            transform: scale(1.1);
+        }
+
+        button.btn-nav {
+            margin-top: 20px;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 50px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button.btn-nav:hover {
+            background: linear-gradient(135deg, #ff512f, #dd2476);
+            transform: scale(1.05);
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            width: 90%;
+            max-width: 1000px;
+            text-align: center;
+            z-index: 1000;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .popup img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .popup .buttons button {
+            margin: 5px;
+            padding: 10px 15px;
+            border-radius: 50px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .popup .buttons button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Styles for second popup section */
+        .popup-second {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .popup-second img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .popup-second button {
+            margin: 10px;
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <video id="bg-video" autoplay loop muted>
+        <source src="gambaranjay/bgmateri.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="content">
+        <h2>Daftar Materi</h2>
+        <div class="materi-list">
+            <ul>
+                <li onclick="showMateri(1)">
+                    <img src="gambaranjay/materi1.png" alt="Materi 1">
+                    <strong>Materi 1</strong>
+                </li>
+                <li onclick="showMateri(2)">
+                    <img src="gambaranjay/materi2.png" alt="Materi 2">
+                    <strong>Materi 2</strong>
+                </li>
+                <li onclick="showMateri(3)">
+                    <img src="gambaranjay/materi3.png" alt="Materi 3">
+                    <strong>Materi 3</strong>
+                </li>
+            </ul>
+            <button class="btn-nav" onclick="window.location.href='halamanutama.html'">Kembali ke Halaman Utama</button>
+        </div>
+    </div>
+
+    <!-- Popup Materi -->
+    <div id="popup-materi" class="popup">
+        <img id="popup-img" src="" alt="Materi">
+        <div class="buttons">
+            <button onclick="showPenjelasan()">Lihat Penjelasan</button>
+            <button onclick="closePopup()">Tutup</button>
+        </div>
+    </div>
+
+    <!-- Popup Penjelasan -->
+    <div id="popup-penjelasan" class="popup">
+        <div id="penjelasan-content"></div>
+        <div class="buttons">
+            <button onclick="showPenjelasan()">Lanjut</button>
+            <button onclick="closePopup()">Tutup</button>
+        </div>
+    </div>
+
+    <!-- Popup Soal -->
+    <div id="popup-soal" class="popup">
+        <div id="soal-content"></div>
+        <div class="buttons">
+            <button onclick="closePopup()">Tutup</button>
+        </div>
+    </div>
+
+    <!-- Additional Popup Structure -->
+    <div id="popup-second" class="popup-second">
+        <h2>Materi Pembelajaran</h2>
+        <button onclick="showMateri(1)">Materi 1</button>
+        <button onclick="showMateri(2)">Materi 2</button>
+        <button onclick="showMateri(3)">Materi 3</button>
+    </div>
+
+    <script>
+        const materiData = [
+            {
+                id: 1,
+                img: 'gambaranjay/materi1.png',
+                penjelasan: ['gambaranjay/materi1lengkap1.png'],
+                soal: ['gambaranjay/contohsoal11.png']
+            },
+            {
+                id: 2,
+                img: 'gambaranjay/materi2.png',
+                penjelasan: ['gambaranjay/materi2lengkap.png', 'gambaranjay/materi2lengkap1.png', 'gambaranjay/materi2lengkap2.png'],
+                soal: ['gambaranjay/contohsoal21.png', 'gambaranjay/contohsoal22.png']
+            },
+            {
+                id: 3,
+                img: 'gambaranjay/materi3.png',
+                penjelasan: ['gambaranjay/materi3lengkap.png'],
+                soal: ['gambaranjay/contohsoal31.png']
+            }
+        ];
+
+        let currentMateri = null;
+        let currentIndex = 0;
+
+        function showMateri(id) {
+            const data = materiData.find(materi => materi.id === id);
+            if (data) {
+                currentMateri = data;
+                currentIndex = 0;
+                document.getElementById('popup-img').src = data.img;
+                document.getElementById('popup-materi').style.display = 'block';
+            }
+        }
+
+        function showPenjelasan() {
+            if (currentMateri && currentIndex < currentMateri.penjelasan.length) {
+                document.getElementById('penjelasan-content').innerHTML = `
+                    <img src="${currentMateri.penjelasan[currentIndex]}" alt="Penjelasan Lengkap ${currentIndex + 1}">
+                `;
+                currentIndex++;
+                document.getElementById('popup-materi').style.display = 'none';
+                document.getElementById('popup-penjelasan').style.display = 'block';
+            } else {
+                showContohSoal();
+            }
+        }
+
+        function showContohSoal() {
+            if (currentMateri && currentIndex - currentMateri.penjelasan.length < currentMateri.soal.length) {
+                const soalIndex = currentIndex - currentMateri.penjelasan.length;
+                document.getElementById('soal-content').innerHTML = `
+                    <img src="${currentMateri.soal[soalIndex]}" alt="Contoh Soal ${soalIndex + 1}">
+                `;
+                currentIndex++;
+                document.getElementById('popup-penjelasan').style.display = 'none';
+                document.getElementById('popup-soal').style.display = 'block';
+            } else {
+                closePopup();
+            }
+        }
+
+        function closePopup() {
+            document.querySelectorAll('.popup').forEach(popup => popup.style.display = 'none');
+            currentMateri = null;
+            currentIndex = 0;
+        }
+    </script>
+</body>
+</html>
